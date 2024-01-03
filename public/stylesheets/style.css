@@ -1,0 +1,25 @@
+body {
+	text-align: center;
+	font-family: 'Roboto Condensed', sans-serif;
+}
+
+main > .card {
+	max-width: 60%;
+	border: none;
+}
+
+main .content-img {
+	display: block;
+	margin: 2rem auto;
+	max-width: 30%;
+	height: auto;
+}
+main .success-card > .row {
+	align-items: center;
+}
+
+@media (max-width: 575px) {
+	.success-card .card-body-url {
+		text-align: center !important;
+	}
+}
