@@ -19,14 +19,40 @@ function generateCharacterArray() {
 
 // 產生隨機短網址
 function createShortenerUrl(link) {
-	const charArray = generateCharacterArray()
-	let randomChar = ''
-	for (let i = 0; i < 5; i++) {
-		const indexOfChar = Math.floor(Math.random() * charArray.length) + 1
-		randomChar += charArray[indexOfChar]
+	let matchedUrl = ''
+	// 比對輸入的長網址
+	matchedUrl = compareUrl(link, urls)
+	if (matchedUrl.length !== 0) {
+		return matchedUrl[0].shortenerUrl
+	} else {
+		const charArray = generateCharacterArray()
+		let newLink = `${BASE_URL}/`
+		do {
+			let randomChar = ''
+			for (let i = 0; i < 5; i++) {
+				const indexOfChar = Math.floor(Math.random() * charArray.length) + 1
+				randomChar += charArray[indexOfChar]
+			}
+			newLink += randomChar
+			// 比對是否產生重複短網址
+			matchedUrl = compareUrl(newLink, urls)
+		} while (matchedUrl === true)
+		return newLink
 	}
-	const newLink = `${BASE_URL}/${randomChar}`
-	return newLink
+}
+
+// 比對是否輸入過此長網址 或是產生重複短網址
+function compareUrl(link, datas) {
+	const alertText = `The url: ${link} is been used`
+	const matchedLink = datas.filter((data) => {
+		if (data.longerUrl === link) {
+			console.log(alertText)
+			return data.shortenerUrl
+		} else if (data.shortenerUrl === link) {
+			return true
+		}
+	})
+	return matchedLink
 }
 
 const app = express()
