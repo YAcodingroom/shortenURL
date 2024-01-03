@@ -2,6 +2,8 @@
 import express from 'express'
 import { engine } from 'express-handlebars'
 import bodyParser from 'body-parser'
+import { createRequire } from 'module'
+import fs from 'fs'
 
 // 產生大小寫英文和數字字元的陣列
 function generateCharacterArray() {
@@ -37,6 +39,8 @@ function createShortenerUrl(link) {
 			// 比對是否產生重複短網址
 			matchedUrl = compareUrl(newLink, urls)
 		} while (matchedUrl === true)
+
+		writeJsonData(link, newLink)
 		return newLink
 	}
 }
@@ -55,9 +59,27 @@ function compareUrl(link, datas) {
 	return matchedLink
 }
 
+// 將 URL 資料寫入 json 檔
+function writeJsonData(longerUrl, shortenerUrl) {
+	const jsonDir = './public/jsons'
+	const urlsData = !urls.length ? JSON.parse(urls) : urls
+	urlsData.push({ longerUrl, shortenerUrl })
+
+	const json = JSON.stringify(urlsData)
+	fs.writeFile(`${jsonDir}/shortenerUrl.json`, json, (err) => {
+		if (err) {
+			console.log(err)
+		} else {
+			console.log('Writing success')
+		}
+	})
+}
+
 const app = express()
 const port = 3000
 const BASE_URL = 'https://shortenerurl.com'
+const require = createRequire(import.meta.url)
+const urls = require('./public/jsons/shortenerUrl.json')
 
 app.use(express.static('public'))
 app.use(bodyParser.urlencoded({ extended: true }))
