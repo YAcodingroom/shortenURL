@@ -8,6 +8,10 @@ app.get('/', (req, res) => {
 	res.send('Shorten URL web app')
 })
 
+app.post('/shorten', (req, res) => {
+	res.send('route shorten')
+})
+
 app.listen(port, () => {
 	console.log(`Sever is running on port ${port}`)
 })
