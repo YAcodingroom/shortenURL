@@ -103,7 +103,8 @@ app.get('/', (req, res) => {
 app.post('/shorten', (req, res) => {
 	const longerUrl = req.body.url
 	const shortenerUrl = createShortenerUrl(longerUrl)
-	res.send(shortenerUrl)
+	const qrCodeImagePath = './qrcodeImages/qrCode.png'
+	res.render('result', { longerUrl, shortenerUrl, qrCodeImagePath })
 })
 
 app.listen(port, () => {
