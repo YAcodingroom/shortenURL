@@ -4,6 +4,7 @@ import { engine } from 'express-handlebars'
 import bodyParser from 'body-parser'
 import { createRequire } from 'module'
 import fs from 'fs'
+import qr from 'qr-image'
 
 // 產生大小寫英文和數字字元的陣列
 function generateCharacterArray() {
@@ -40,6 +41,7 @@ function createShortenerUrl(link) {
 			matchedUrl = compareUrl(newLink, urls)
 		} while (matchedUrl === true)
 
+		createQrCodeImage(link)
 		writeJsonData(link, newLink)
 		return newLink
 	}
@@ -73,6 +75,13 @@ function writeJsonData(longerUrl, shortenerUrl) {
 			console.log('Writing success')
 		}
 	})
+}
+
+// 產生 QR code 圖片
+function createQrCodeImage(link) {
+	const qrCodeImage = qr.image(link)
+	const qrImgDir = './public/qrcodeImages'
+	qrCodeImage.pipe(fs.createWriteStream(`${qrImgDir}/qrCode.png`))
 }
 
 const app = express()
